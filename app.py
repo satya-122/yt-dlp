@@ -273,6 +273,7 @@ def build_download_command(task_id, url, quality, output_format, playlist, subti
 
     command = [
         yt_dlp,
+        "--extractor-args", "youtube:player_client=android",
         "--newline",
         "--no-color",
         "--restrict-filenames",
@@ -482,6 +483,7 @@ def metadata():
 
     command = [
         yt_dlp,
+        "--extractor-args", "youtube:player_client=android",
         "--dump-single-json",
         "--skip-download",
         "--no-warnings",
