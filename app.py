@@ -15,8 +15,8 @@ from flask import Flask, Response, abort, jsonify, request, send_from_directory
 from flask_cors import CORS 
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-FRONTEND_DIR = BASE_DIR / "frontend"
+BASE_DIR = Path(__file__).resolve().parent
+FRONTEND_DIR = BASE_DIR
 DOWNLOAD_DIR = BASE_DIR / "downloads"
 DOWNLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -48,8 +48,7 @@ COMPLETED_DOWNLOADS = {}
 TASK_LOCK = threading.Lock()
 
 app = Flask(__name__, static_folder=str(FRONTEND_DIR), static_url_path="")
-cors_origins = [origin.strip() for origin in os.getenv("CORS_ORIGINS", "*").split(",") if origin.strip()]
-CORS(app, resources={r"/api/*": {"origins": cors_origins or "*"}})
+CORS(app)
 
 
 def utc_now():
@@ -447,15 +446,8 @@ def add_security_headers(response):
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["Referrer-Policy"] = "same-origin"
     response.headers["Content-Security-Policy"] = (
-        "default-src 'self'; "
-        "img-src 'self' data: http: https:; "
-        "connect-src 'self' http://127.0.0.1:5000 http://localhost:5000; "
-        "script-src 'self'; "
-        "style-src 'self'; "
-        "object-src 'none'; "
-        "base-uri 'self'; "
-        "frame-ancestors 'none'"
-    )
+    "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;"
+)
     return response
 
 
@@ -635,4 +627,4 @@ def file_download(filename):
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", "5000"))
-    app.run(host="127.0.0.1", port=port, debug=os.getenv("FLASK_DEBUG") == "1", threaded=True)
+    app.run(host="0.0.0.0", port=port, debug=True, threaded=True)
