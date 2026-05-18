@@ -1,4 +1,4 @@
-const API_BASE = window.location.protocol === "file:" ? "http://127.0.0.1:5000" : "";
+const API_BASE = "https://yt-dlp-fgfm.onrender.com";
 
 const elements = {
   fetchForm: document.querySelector("#fetchForm"),
